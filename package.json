@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "axios": "^1.8.4",
+    "express": "^5.1.0",
+    "firebase": "^11.6.0",
+    "next": "^15.3.1"
+  },
+  "name": "chatbot_tinyllama",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/express": "^5.0.1"
+  }
+}
