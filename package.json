@@ -9,5 +9,9 @@
     "build": "next build",
     "start": "next start",
     "vercel-build": "next build"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.2",
+    "typescript": "5.8.3"
   }
 }
