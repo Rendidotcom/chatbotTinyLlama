@@ -1,5 +1,5 @@
 // Import modul Firebase v9 secara terpisah
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApps } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
@@ -14,7 +14,7 @@ const firebaseConfig = {
 };
 
 // Inisialisasi Firebase
-const app = initializeApp(firebaseConfig);
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 
 // Dapatkan auth dan firestore
 export const auth = getAuth(app);

@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { useRouter } from 'next/router';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import '../firebase';
+'use client';
 
-const auth = getAuth();
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../firebase';
+ // pastikan path ini sesuai struktur proyekmu
 
 export default function Register() {
   const [email, setEmail] = useState('');

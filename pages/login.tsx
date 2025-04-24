@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { useRouter } from 'next/router';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import '../firebase';
+'use client';
 
-const auth = getAuth();
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../firebase';
+ // pastikan path ini sesuai dengan struktur proyekmu
 
 export default function Login() {
   const [email, setEmail] = useState('');
