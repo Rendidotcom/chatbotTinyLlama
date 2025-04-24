@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { addDoc, collection } from 'firebase/firestore';
-import { firestore } from '../firebase'; // sesuaikan path
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { firestore } from '../firebase'; // pastikan path ini sesuai
 
 export default function Chatbot() {
   const [messages, setMessages] = useState<any[]>([
@@ -13,7 +13,7 @@ export default function Chatbot() {
       await addDoc(collection(firestore, 'messages'), {
         text,
         sender,
-        timestamp: new Date(),
+        timestamp: serverTimestamp(),
       });
     } catch (error) {
       console.error('Gagal menyimpan pesan:', error);
