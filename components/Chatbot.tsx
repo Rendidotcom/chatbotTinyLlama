@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { addDoc, collection } from 'firebase/firestore';
+import { firestore } from '../firebase'; // sesuaikan path
 
 export default function Chatbot() {
   const [messages, setMessages] = useState<any[]>([
@@ -6,24 +8,37 @@ export default function Chatbot() {
   ]);
   const [input, setInput] = useState('');
 
-  const handleSendMessage = () => {
+  const saveMessage = async (text: string, sender: string) => {
+    try {
+      await addDoc(collection(firestore, 'messages'), {
+        text,
+        sender,
+        timestamp: new Date(),
+      });
+    } catch (error) {
+      console.error('Gagal menyimpan pesan:', error);
+    }
+  };
+
+  const handleSendMessage = async () => {
     if (input.trim()) {
-      setMessages([
-        ...messages,
-        { text: input, sender: 'user' },
-        { text: 'Tunggu sebentar...', sender: 'bot' },
-      ]);
+      const userMessage = { text: input, sender: 'user' };
+      const botPlaceholder = { text: 'Tunggu sebentar...', sender: 'bot' };
+
+      setMessages([...messages, userMessage, botPlaceholder]);
+      await saveMessage(input, 'user');
       setInput('');
 
-      // Simulasi bot jawab
-      setTimeout(() => {
-        setMessages((prevMessages) =>
-          prevMessages.map((msg, index) =>
-            index === prevMessages.length - 1 && msg.sender === 'bot'
-              ? { ...msg, text: 'Ini jawaban dari chatbot' }
+      setTimeout(async () => {
+        const reply = 'Ini jawaban dari chatbot';
+        setMessages((prev) =>
+          prev.map((msg, idx) =>
+            idx === prev.length - 1 && msg.sender === 'bot'
+              ? { ...msg, text: reply }
               : msg
           )
         );
+        await saveMessage(reply, 'bot');
       }, 2000);
     }
   };
@@ -52,7 +67,7 @@ export default function Chatbot() {
           placeholder="Ketik pesan..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+          onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
           className="flex-1 p-3 border rounded-l-lg border-gray-300"
         />
         <button
