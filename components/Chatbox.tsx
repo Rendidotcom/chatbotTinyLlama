@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { firestore } from '../firebase'; // path sudah betul
+import { db } from '../firebase'; // path sudah betul
 
 interface Message {
   text: string;
@@ -18,7 +18,7 @@ export default function Chatbot() {
 
   const saveMessage = async (text: string, sender: 'user' | 'bot') => {
     try {
-      const messagesRef = collection(firestore, 'messages');
+      const messagesRef = collection(db, 'messages');
       await addDoc(messagesRef, {
         text,
         sender,

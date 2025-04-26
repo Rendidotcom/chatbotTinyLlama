@@ -1,5 +1,6 @@
-// C:\Users\rendi\Documents\coding\chatbot_TinyLlama\firebase.ts
+// firebase.ts
 import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 // Firebase config
@@ -15,6 +16,9 @@ const firebaseConfig = {
 // Inisialisasi Firebase
 const app = initializeApp(firebaseConfig);
 
-// Export Firestore yang benar
-const firestore = getFirestore(app);
-export { firestore };
+// Buat instance Auth dan Firestore
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// Export supaya bisa dipakai di file lain
+export { auth, db };
