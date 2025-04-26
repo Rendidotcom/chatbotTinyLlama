@@ -14,7 +14,7 @@ export default function Popup({ isOpen, onClose }: PopupProps) {
     if (isOpen) {
       setShow(true);
     } else {
-      const timer = setTimeout(() => setShow(false), 300);
+      const timer = setTimeout(() => setShow(false), 150); // Mempercepat transisi
       return () => clearTimeout(timer);
     }
   }, [isOpen]);
@@ -23,16 +23,16 @@ export default function Popup({ isOpen, onClose }: PopupProps) {
 
   return (
     <div
-      className={`fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50 transition-opacity duration-300 ${
+      className={`fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50 transition-opacity duration-200 ${ // Mempercepat transisi opacity
         isOpen ? 'opacity-100' : 'opacity-0'
       }`}
     >
       <div
-        className={`bg-white p-6 rounded-lg shadow-lg w-80 transform transition-transform duration-300 ${
+        className={`bg-white p-6 rounded-lg shadow-lg w-80 transform transition-transform duration-200 ${ // Mempercepat transisi transform
           isOpen ? 'scale-100' : 'scale-95'
         }`}
       >
-        <h2 className="text-xl font-bold text-gray-800 text-center">Selamat datang di TinyLlama Chatbot!</h2>
+        <h2 className="text-xl font-bold text-gray-800 text-center">Selamat datang di Teman Lama Chatbot!</h2>
         <p className="text-gray-600 mt-4 text-center">Nikmati pengalaman chatting yang seru!</p>
         <div className="flex justify-center">
           <button
