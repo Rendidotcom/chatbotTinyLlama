@@ -1,6 +1,7 @@
-// pages/index.tsx
+'use client';
+
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../firebase';
 import Chatbox from '../components/Chatbox';
@@ -15,7 +16,7 @@ export default function Home() {
       if (!user) {
         router.push('/login');
       } else {
-        setPopupOpen(true); // Menampilkan pop-up ketika pengguna masuk
+        setPopupOpen(true);
       }
     });
 
@@ -23,16 +24,16 @@ export default function Home() {
   }, [router]);
 
   const closePopup = () => {
-    setPopupOpen(false); // Menutup pop-up
+    setPopupOpen(false);
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <h1 className="text-3xl font-bold mb-8 text-gray-800">
         Selamat datang di TinyLlama Chatbot!
       </h1>
       <Chatbox />
       <Popup isOpen={isPopupOpen} onClose={closePopup} />
-    </div>
+    </main>
   );
 }

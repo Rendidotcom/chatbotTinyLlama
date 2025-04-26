@@ -10,14 +10,15 @@ interface Message {
   sender: 'user' | 'bot';
 }
 
-// Ambil API key dari environment variable
-const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!);
+// Inisialisasi Gemini API
+const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 
 export default function Chatbox() {
   const [messages, setMessages] = useState<Message[]>([
     { text: 'Halo! Apa yang bisa saya bantu?', sender: 'bot' },
   ]);
-  const [input, setInput] = useState<string>('');
+  const [input, setInput] = useState('');
 
   const saveMessage = async (text: string, sender: 'user' | 'bot') => {
     try {
@@ -33,40 +34,40 @@ export default function Chatbox() {
   };
 
   const handleSendMessage = async () => {
-    if (input.trim()) {
-      const userMessage: Message = { text: input, sender: 'user' };
-      setMessages((prev) => [...prev, userMessage]);
-      await saveMessage(input, 'user');
-      setInput('');
+    if (!input.trim() || !genAI) return;
 
-      try {
-        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' }); // <- MODEL YANG BENAR SEKARANG
-        const result = await model.generateContent(input);
-        const response = result.response;
-        const text = response.text();
+    const userMessage: Message = { text: input, sender: 'user' };
+    setMessages((prev) => [...prev, userMessage]);
+    await saveMessage(input, 'user');
+    setInput('');
 
-        const botMessage: Message = { text, sender: 'bot' };
-        setMessages((prev) => [...prev, botMessage]);
-        await saveMessage(text, 'bot');
-      } catch (error) {
-        console.error('Gagal mendapatkan jawaban dari Gemini:', error);
-        const errorMessage: Message = { text: 'Maaf, terjadi kesalahan.', sender: 'bot' };
-        setMessages((prev) => [...prev, errorMessage]);
-      }
+    try {
+      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
+      const result = await model.generateContent(input);
+      const response = result.response;
+      const text = response.text();
+
+      const botMessage: Message = { text, sender: 'bot' };
+      setMessages((prev) => [...prev, botMessage]);
+      await saveMessage(text, 'bot');
+    } catch (error) {
+      console.error('Gagal mendapatkan jawaban dari Gemini:', error);
+      const errorMessage: Message = { text: 'Maaf, terjadi kesalahan.', sender: 'bot' };
+      setMessages((prev) => [...prev, errorMessage]);
     }
   };
 
   return (
-    <div className="flex flex-col h-80 w-full max-w-md mx-auto bg-white shadow-lg rounded-lg p-4">
-      <div className="flex-1 overflow-y-auto">
+    <div className="chat-container">
+      <div className="messages">
         {messages.map((message, index) => (
           <div
             key={index}
-            className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'} mb-2`}
+            className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             <div
-              className={`max-w-xs p-3 rounded-lg text-white ${
-                message.sender === 'user' ? 'bg-blue-500' : 'bg-gray-400'
+              className={`message ${
+                message.sender === 'user' ? 'user' : 'bot'
               }`}
             >
               {message.text}
@@ -74,19 +75,15 @@ export default function Chatbox() {
           </div>
         ))}
       </div>
-      <div className="flex mt-3">
+      <div className="input-container">
         <input
           type="text"
           placeholder="Ketik pesan..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-          className="flex-1 p-3 border rounded-l-lg border-gray-300"
         />
-        <button
-          onClick={handleSendMessage}
-          className="bg-blue-500 text-white p-3 rounded-r-lg hover:bg-blue-600"
-        >
+        <button onClick={handleSendMessage}>
           Kirim
         </button>
       </div>
