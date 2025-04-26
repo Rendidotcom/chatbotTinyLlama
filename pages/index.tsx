@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../firebase'; // atau '../lib/firebaseConfig'
-import Chatbot from '../components/Chatbot';
+import { auth } from '../firebase';
+import Chatbox from '../components/Chatbox';
 
 export default function Home() {
   const router = useRouter();
@@ -19,9 +19,10 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="text-3xl font-bold mb-8 text-gray-800">Selamat datang di TinyLlama Chatbot!</h1>
-      {/* Tampilkan komponen chatbot */}
-      <Chatbot />
+      <h1 className="text-3xl font-bold mb-8 text-gray-800">
+        Selamat datang di TinyLlama Chatbot!
+      </h1>
+      <Chatbox />
     </div>
   );
 }
