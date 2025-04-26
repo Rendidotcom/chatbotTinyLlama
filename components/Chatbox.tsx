@@ -1,16 +1,25 @@
+// C:\Users\rendi\Documents\coding\chatbot_TinyLlama\components\Chatbot.tsx
+'use client';
+
 import React, { useState } from 'react';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { firestore } from '../firebase'; // pastikan path ini sesuai
+import { firestore } from '../firebase'; // path sudah betul
+
+interface Message {
+  text: string;
+  sender: 'user' | 'bot';
+}
 
 export default function Chatbot() {
-  const [messages, setMessages] = useState<any[]>([
+  const [messages, setMessages] = useState<Message[]>([
     { text: 'Halo! Apa yang bisa saya bantu?', sender: 'bot' },
   ]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState<string>('');
 
-  const saveMessage = async (text: string, sender: string) => {
+  const saveMessage = async (text: string, sender: 'user' | 'bot') => {
     try {
-      await addDoc(collection(firestore, 'messages'), {
+      const messagesRef = collection(firestore, 'messages');
+      await addDoc(messagesRef, {
         text,
         sender,
         timestamp: serverTimestamp(),
@@ -22,10 +31,10 @@ export default function Chatbot() {
 
   const handleSendMessage = async () => {
     if (input.trim()) {
-      const userMessage = { text: input, sender: 'user' };
-      const botPlaceholder = { text: 'Tunggu sebentar...', sender: 'bot' };
+      const userMessage: Message = { text: input, sender: 'user' };
+      const botPlaceholder: Message = { text: 'Tunggu sebentar...', sender: 'bot' };
 
-      setMessages([...messages, userMessage, botPlaceholder]);
+      setMessages((prev) => [...prev, userMessage, botPlaceholder]);
       await saveMessage(input, 'user');
       setInput('');
 
